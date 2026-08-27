@@ -43,7 +43,7 @@ pacman -Syu --noconfirm \
 
 echo "Installing debloated packages..."
 echo "---------------------------------------------------------------"
-get-debloated-pkgs --add-common --prefer-nano
+get-debloated-pkgs --add-common --prefer-nano ffmpeg-mini
 
 # the build needs java 8 to compile the old java code, make sure it
 # is the java/javac that gets used during the builds
