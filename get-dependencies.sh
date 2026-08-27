@@ -5,6 +5,7 @@ set -eu
 ARCH=$(uname -m)
 
 echo "Installing build dependencies..."
+echo "---------------------------------------------------------------"
 pacman -Syu --noconfirm \
 	alsa-lib          \
 	cmake             \
@@ -40,6 +41,9 @@ pacman -Syu --noconfirm \
 	zlib              \
 	zip
 
+echo "Installing debloated packages..."
+echo "---------------------------------------------------------------"
+get-debloated-pkgs --add-common --prefer-nano
 
 # the build needs java 8 to compile the old java code, make sure it
 # is the java/javac that gets used during the builds
@@ -56,7 +60,8 @@ build_meson_bin() (
 	shift
 
 	echo "Building $ATL_SOURCE/$repo..."
-		if [ "$repo" != 'android_translation_layer' ]; then
+	echo "---------------------------------------------------------------"
+	if [ "$repo" != 'android_translation_layer' ]; then
 		git clone "$ATL_SOURCE/$repo" ./"$repo"
 		cd ./"$repo"
 	else
@@ -77,7 +82,8 @@ build_meson_bin() (
 # wolfssl needs to be built with jni support enabled for art_standalone
 build_wolfssl() (
 	echo "Building wolfssl..."
-		curl -L -o wolfssl.tar.gz "https://github.com/wolfSSL/wolfssl/archive/refs/tags/v5.9.2-stable.tar.gz"
+	echo "---------------------------------------------------------------"
+	curl -L -o wolfssl.tar.gz "https://github.com/wolfSSL/wolfssl/archive/refs/tags/v5.9.2-stable.tar.gz"
 	tar -xzf wolfssl.tar.gz
 	cd wolfssl-5.9.2-stable
 
@@ -116,7 +122,8 @@ build_wolfssl() (
 # recipe for how the aarch64 build provides it
 build_vixl() (
 	echo "Building vixl..."
-		curl -L -o vixl-7.0.0.tar.gz "https://github.com/Linaro/vixl/archive/refs/tags/7.0.0.tar.gz"
+	echo "---------------------------------------------------------------"
+	curl -L -o vixl-7.0.0.tar.gz "https://github.com/Linaro/vixl/archive/refs/tags/7.0.0.tar.gz"
 	tar -xzf vixl-7.0.0.tar.gz
 	cd vixl-7.0.0
 
@@ -129,7 +136,8 @@ build_vixl() (
 
 build_art_standalone() (
 	echo "Building $ATL_SOURCE/art_standalone..."
-		git clone "$ATL_SOURCE/art_standalone" ./art_standalone
+	echo "---------------------------------------------------------------"
+	git clone "$ATL_SOURCE/art_standalone" ./art_standalone
 	cd ./art_standalone
 
 	# make art resolve addr2line through PATH instead of the hardcoded /usr/bin/addr2line
@@ -160,5 +168,3 @@ build_meson_bin android_translation_layer
 # java 8 is only needed to build, get rid of it so that the resulting
 # AppImage does not bundle the wrong java runtime
 pacman -Rns --noconfirm jdk8-openjdk
-
-
